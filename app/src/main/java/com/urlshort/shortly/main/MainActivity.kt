@@ -1,4 +1,4 @@
-package com.urlshort.shortly
+package com.urlshort.shortly.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.urlshort.shortly.ui.theme.ShortlyTheme
+import com.urlshort.shortly.base.ui.theme.ShortlyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
