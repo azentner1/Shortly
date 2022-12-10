@@ -24,11 +24,12 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            buildConfigField "String", 'BASE_URL', '"https://rss.applemarketingtools.com"'
+            buildConfigField "String", 'BASE_URL', '"https://api.shrtco.de/v2/"'
             minifyEnabled false
         }
         release {
-            minifyEnabled false
+            minifyEnabled
+            buildConfigField "String", 'BASE_URL', '"https://api.shrtco.de/v2/"'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
