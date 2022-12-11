@@ -1,5 +1,6 @@
 package com.urlshort.shortly.base.di
 
+import com.urlshort.shortly.feature.home.data.api.HomeApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,4 +12,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiServiceModule {
 
+    @Provides
+    @Singleton
+    fun provideHomeApiService(retrofit: Retrofit): HomeApiService {
+        return retrofit.create(HomeApiService::class.java)
+    }
 }

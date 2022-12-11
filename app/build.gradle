@@ -5,6 +5,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+apply plugin: "realm-android"
+
 android {
     compileSdk 32
 

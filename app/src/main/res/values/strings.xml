@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Shortly</string>
+    <string name="empty_home_subtitle">Let\'s get started!</string>
+    <string name="empty_home_description">Paste your link into the field to shorten it</string>
+    <string name="link_history_title">Your Link History</string>
+    <string name="copied">Copied!</string>
+    <string name="copy">Copy</string>
+    <string name="home_input_hint">Shorten a link here...</string>
+    <string name="home_action">Shorten it!</string>
 </resources>
