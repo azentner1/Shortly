@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.urlshort.shortly.R
 import com.urlshort.shortly.base.model.domain.ShortenData
+import com.urlshort.shortly.base.test.TestTags
 import com.urlshort.shortly.base.ui.theme.ActionButtonStyle
 import com.urlshort.shortly.base.ui.theme.ActionInputStyle
 import com.urlshort.shortly.base.ui.theme.Blue
@@ -77,7 +79,8 @@ fun HomeComponent(viewModel: HomeViewModel = hiltViewModel()) {
             EmptyHomeComponent(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f), viewModel
+                    .weight(1f)
+                    .testTag(TestTags.TEST_TAGS_EMPTY_COMPONENT)
             )
 
         } else {
@@ -95,14 +98,14 @@ fun HomeComponent(viewModel: HomeViewModel = hiltViewModel()) {
 
 @OptIn(InternalCoroutinesApi::class)
 @Composable
-fun EmptyHomeComponent(modifier: Modifier, viewModel: HomeViewModel) {
+fun EmptyHomeComponent(modifier: Modifier) {
 
     Column(
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Image(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.size(width = 120.dp, height = 32.dp),
             painter = rememberImagePainter(data = R.drawable.ic_logo),
             contentDescription = ""
         )
@@ -132,7 +135,9 @@ fun HomeListComponent(
     shortenUrls: List<ShortenData>
 ) {
     Column(
-        modifier = modifier.background(HistoryBackground),
+        modifier = modifier
+            .background(HistoryBackground)
+            .testTag(TestTags.TEST_TAGS_HISTORY_LIST),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(12.dp))
@@ -248,7 +253,8 @@ fun HomeInputComponent(modifier: Modifier, viewModel: HomeViewModel) {
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
+                        .height(56.dp)
+                        .testTag(TestTags.TEST_TAGS_URL_INPUT),
                     value = text,
                     onValueChange = {
                         text = it
@@ -298,7 +304,8 @@ fun HomeInputComponent(modifier: Modifier, viewModel: HomeViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedButton(modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .testTag(TestTags.TEST_TAGS_URL_ACTION),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
                 onClick = {
                     viewModel.timeout = 3
@@ -311,5 +318,4 @@ fun HomeInputComponent(modifier: Modifier, viewModel: HomeViewModel) {
             }
         }
     }
-
 }
