@@ -6,7 +6,7 @@ import io.realm.RealmResults
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
 
-class HomeDaoImpl: HomeDao {
+class HomeDaoImpl : HomeDao {
 
     override suspend fun saveUrl(homeDataRealm: HomeDataRealm) {
         RealmDB.realmInstance().executeTransaction {
@@ -16,5 +16,14 @@ class HomeDaoImpl: HomeDao {
 
     override suspend fun observeUrls(): Flow<RealmResults<HomeDataRealm>> {
         return RealmDB.realmInstance().where(HomeDataRealm::class.java).findAll().toFlow()
+    }
+
+    override suspend fun deleteUrl(url: String) {
+        val urlData =
+            RealmDB.realmInstance().where(HomeDataRealm::class.java).equalTo("shortLink", url)
+                .findFirst()
+        RealmDB.realmInstance().executeTransaction {
+            urlData?.deleteFromRealm()
+        }
     }
 }

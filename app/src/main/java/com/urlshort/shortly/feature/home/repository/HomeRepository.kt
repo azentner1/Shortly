@@ -15,7 +15,7 @@ class HomeRepository @Inject constructor(
     private val homeDataSource: HomeDataSource,
     private val homeDataMapper: HomeDataMapper,
     private val homeDao: HomeDao
-): BaseRepository() {
+) : BaseRepository() {
 
     suspend fun shortenUrl(url: String): Flow<UiDataState<HomeDataModel>> {
         return fetchData(
@@ -30,6 +30,10 @@ class HomeRepository @Inject constructor(
         return homeDao.observeUrls().map {
             homeDataMapper.mapFromRealmEntity(it)
         }
+    }
+
+    suspend fun deleteUrl(url: String) {
+        homeDao.deleteUrl(url)
     }
 
 }

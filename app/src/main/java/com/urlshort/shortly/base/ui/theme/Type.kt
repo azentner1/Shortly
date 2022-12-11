@@ -46,7 +46,8 @@ val LinkTitleStyle = TextStyle(
     fontFamily = poppinsFontFamily,
     fontWeight = FontWeight.Normal,
     fontSize = 17.sp,
-    color = Grey3
+    color = Grey3,
+
 )
 
 val LinkShortStyle = TextStyle(

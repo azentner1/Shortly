@@ -11,11 +11,10 @@ import com.urlshort.shortly.base.viewmodel.BaseViewModel
 import com.urlshort.shortly.feature.home.model.HomeDataModel
 import com.urlshort.shortly.feature.home.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.lang.Math.ceil
-import java.util.*
 import javax.inject.Inject
 
 @InternalCoroutinesApi
@@ -30,7 +29,7 @@ class HomeViewModel @Inject constructor(
     var timeout by mutableStateOf(3)
 
     override suspend fun doActionForEvent(event: HomeDataEvent) {
-        when(event) {
+        when (event) {
             is HomeDataEvent.ShortenUrl -> {
                 saveShortenedUrl(event.url)
             }
@@ -44,7 +43,12 @@ class HomeViewModel @Inject constructor(
         if (!validateUrl(url)) {
             return
         }
-        homeRepository.shortenUrl(url).collect {
+        val urlToShorten = if (!url.startsWith("http:")) {
+            "https://" + url.trim()
+        } else {
+            url
+        }
+        homeRepository.shortenUrl(urlToShorten).collect {
             dataState = it
             if (it is UiDataState.Error) {
                 inputError = "Something went wrong. Please try again."
@@ -80,12 +84,14 @@ class HomeViewModel @Inject constructor(
         copiedUrl = shortLink
     }
 
-    fun getSecondsLeft(until: Date): Int {
-        return ceil((until.time - Date().time) / 360_000.0).toInt()
+    fun deleteUrl(shortLink: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            homeRepository.deleteUrl(shortLink)
+        }
     }
 }
 
 sealed class HomeDataEvent {
-    data class ShortenUrl(val url: String): HomeDataEvent()
-    object FetchShortenedUrls: HomeDataEvent()
+    data class ShortenUrl(val url: String) : HomeDataEvent()
+    object FetchShortenedUrls : HomeDataEvent()
 }

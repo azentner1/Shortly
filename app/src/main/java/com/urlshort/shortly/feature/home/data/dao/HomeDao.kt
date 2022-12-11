@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface HomeDao {
     suspend fun saveUrl(homeDataRealm: HomeDataRealm)
     suspend fun observeUrls(): Flow<RealmResults<HomeDataRealm>>
+    suspend fun deleteUrl(url: String)
 }

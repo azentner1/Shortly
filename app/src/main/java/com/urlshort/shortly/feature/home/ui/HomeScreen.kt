@@ -3,6 +3,7 @@ package com.urlshort.shortly.feature.home.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,9 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
@@ -31,6 +35,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
@@ -41,7 +46,6 @@ import com.urlshort.shortly.base.ui.theme.ActionInputStyle
 import com.urlshort.shortly.base.ui.theme.Blue
 import com.urlshort.shortly.base.ui.theme.EmptyDescriptionStyle
 import com.urlshort.shortly.base.ui.theme.EmptySubtitleStyle
-import com.urlshort.shortly.base.ui.theme.EmptyTitleStyle
 import com.urlshort.shortly.base.ui.theme.Grey1
 import com.urlshort.shortly.base.ui.theme.HistoryBackground
 import com.urlshort.shortly.base.ui.theme.LinkButtonStyle
@@ -97,7 +101,11 @@ fun EmptyHomeComponent(modifier: Modifier, viewModel: HomeViewModel) {
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(id = R.string.app_name), style = EmptyTitleStyle)
+        Image(
+            modifier = Modifier.fillMaxWidth(),
+            painter = rememberImagePainter(data = R.drawable.ic_logo),
+            contentDescription = ""
+        )
         Spacer(modifier = Modifier.height(12.dp))
         Image(
             modifier = Modifier.fillMaxWidth(),
@@ -164,9 +172,23 @@ fun HomeListItemComponent(modifier: Modifier, viewModel: HomeViewModel, shortenD
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 23.dp, start = 23.dp, end = 23.dp, bottom = 12.dp)
+                    .padding(top = 23.dp, start = 23.dp, end = 23.dp, bottom = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = shortenData.originalLink, maxLines = 1, style = LinkTitleStyle)
+                Text(
+                    text = shortenData.originalLink,
+                    maxLines = 1,
+                    style = LinkTitleStyle,
+                    overflow = TextOverflow.Ellipsis
+                )
+                IconButton(
+                    modifier = Modifier.size(width = 14.dp, height = 18.dp),
+                    onClick = { viewModel.deleteUrl(shortenData.shortLink) }) {
+                    Icon(
+                        painter = rememberImagePainter(data = R.drawable.ic_delete),
+                        contentDescription = ""
+                    )
+                }
             }
             Spacer(
                 modifier = Modifier
@@ -201,76 +223,93 @@ fun HomeListItemComponent(modifier: Modifier, viewModel: HomeViewModel, shortenD
 @InternalCoroutinesApi
 @Composable
 fun HomeInputComponent(modifier: Modifier, viewModel: HomeViewModel) {
-    Column(
-        modifier = modifier
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
             .background(Purple)
-            .padding(horizontal = 48.dp, vertical = 46.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            modifier = Modifier
+                .size(width = 237.dp, height = 128.dp)
+                .align(Alignment.TopEnd),
+            painter = rememberImagePainter(data = R.drawable.ic_home_action_shape),
+            contentDescription = ""
+        )
 
-        var text by remember { mutableStateOf("") }
+        Column(
+            modifier = modifier
+                .padding(horizontal = 48.dp, vertical = 46.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Box {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                value = text,
-                onValueChange = {
-                    text = it
-                },
-                placeholder = {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.home_input_hint),
-                        style = ActionInputStyle,
-                        textAlign = TextAlign.Center
-                    )
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = White,
-                    textColor = Grey1
-                ),
-                textStyle = ActionInputStyle.copy(textAlign = TextAlign.Center)
-            )
+            var text by remember { mutableStateOf("") }
 
-            LaunchedEffect(viewModel.timeout) {
-                if (viewModel.timeout > 0) {
-                    delay(1000)
-                    viewModel.timeout -= 1
-                } else {
-                    viewModel.inputError = ""
-                }
-            }
-
-            if (viewModel.inputError.isNotEmpty()) {
-                Surface(
+            Box {
+                OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(2.dp, Red)
-                ) {
-                    Text(
-                        modifier = Modifier.background(Blue),
-                        text = viewModel.inputError,
-                        style = ActionInputStyle,
-                        color = Red,
-                        textAlign = TextAlign.Center
-                    )
+                    value = text,
+                    onValueChange = {
+                        text = it
+                    },
+                    placeholder = {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(R.string.home_input_hint),
+                            style = ActionInputStyle,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = White,
+                        textColor = Grey1
+                    ),
+                    textStyle = ActionInputStyle.copy(textAlign = TextAlign.Center)
+                )
+
+                LaunchedEffect(viewModel.timeout) {
+                    if (viewModel.timeout > 0) {
+                        delay(1000)
+                        viewModel.timeout -= 1
+                    } else {
+                        viewModel.inputError = ""
+                    }
+                }
+
+                if (viewModel.inputError.isNotEmpty()) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(2.dp, Red)
+                    ) {
+                        Text(
+                            modifier = Modifier.background(Blue),
+                            text = viewModel.inputError,
+                            style = ActionInputStyle,
+                            color = Red,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedButton(modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
-            onClick = {
-                viewModel.timeout = 3
-                viewModel.setStateForEvent(HomeDataEvent.ShortenUrl(text))
-            }) {
-            Text(text = stringResource(R.string.home_action).uppercase(), style = ActionButtonStyle)
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
+                onClick = {
+                    viewModel.timeout = 3
+                    viewModel.setStateForEvent(HomeDataEvent.ShortenUrl(text))
+                }) {
+                Text(
+                    text = stringResource(R.string.home_action).uppercase(),
+                    style = ActionButtonStyle
+                )
+            }
         }
     }
+
 }
