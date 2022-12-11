@@ -43,6 +43,7 @@ class HomeComponentTest {
         hiltTestRule.inject()
     }
 
+    // tests apps cold start and saving data
     @Test
     fun homeColdStart() {
         latch = CountDownLatch(7)
@@ -67,6 +68,7 @@ class HomeComponentTest {
         latch.countDown()
     }
 
+    // tests the history is populated
     @Test
     fun homeHotStart() {
         latch = CountDownLatch(1)
