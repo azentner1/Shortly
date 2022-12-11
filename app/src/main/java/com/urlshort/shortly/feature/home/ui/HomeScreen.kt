@@ -292,7 +292,6 @@ fun HomeInputComponent(modifier: Modifier, viewModel: HomeViewModel) {
                         border = BorderStroke(2.dp, Red)
                     ) {
                         Text(
-                            modifier = Modifier.background(Blue),
                             text = viewModel.inputError,
                             style = ActionInputStyle,
                             color = Red,
